@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
+import CountryTable from './CountryTable';
 
 class App extends Component {
 
@@ -9,7 +10,7 @@ class App extends Component {
     this.state = {
       country: "",
       population: "",
-      countryList: ""
+      countryList: []
     }
   }
 
@@ -36,18 +37,23 @@ class App extends Component {
     console.log('Country submitted: ' + this.state.country);
     console.log('Population was submitted: ' + this.state.population);
     axios.get('https://jsonmock.hackerrank.com/api/countries/search?name=' + this.state.country)
-    .then((response) => this.printResults(response));
+    .then((response) => this.getCountryList(response));
     event.preventDefault();
   }
 
-  printResults = (results) => {
-    console.log(JSON.stringify(results.data.data));
-    // const countries = results.data.data.keys('name');
-    // for (const c in countries) {
-    //   console.log(c);
-    // }
-    
-    this.setState({countryList: JSON.stringify(results.data.data)});
+  getCountryList = (results) => {
+    console.log(results.data.data);
+    var countries = [];
+    var countriesData = results.data.data;
+    for (var i = 0; i < countriesData.length; i++) {
+        console.log(countriesData[i]);
+        if (countriesData[i].population > this.state.population) {
+          countries.push(countriesData[i].name);
+        }
+    }
+    console.log('Countries: ' + countries);
+    console.log(typeof(countries));
+    this.setState({countryList: countries});
   }
 
   render() {
@@ -66,7 +72,7 @@ class App extends Component {
             <br/ >
             <input type="submit" value="Submit" />
           </form>
-          <p id="CountryList" className="consolelog"> {this.state.countryList} </p>
+          <CountryTable countries={this.state.countryList}/>
       </div>
 
     );
