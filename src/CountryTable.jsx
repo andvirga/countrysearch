@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
 
 class CountryTable extends Component {
-    constructor(props)  {
-        super(props);
+
+    mapCountriesData = () => {
+        console.log(this.props.capitalInfo);
+        const list = this.props.countries.map((c) => {
+            return (<div>
+                        <li>{c.name}</li>
+                        <p>Population: {c.population}</p>
+                        {this.props.capitalInfo && <p>Capital: {c.capital}</p>}
+                    </div>
+                    )
+        });
+
+        return list;
     }
 
     render() {
-        const list = this.props.countries.map(function(name) {
-            return (<li>{name}</li>)
-        });
         return (
             <div>
                 <ul>
-                    {list}
+                    {this.mapCountriesData()}
                 </ul>
              </div>
         );

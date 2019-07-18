@@ -10,19 +10,9 @@ class App extends Component {
     this.state = {
       country: "",
       population: "",
-      countryList: []
+      countryList: [],
+      capitalInfo: false,
     }
-  }
-
-  searchCountries = () => {
-    var countryVal = document.getElementsByName("country").text;
-    var populationVal = document.getElementsByName("population").text;
-    this.setState({
-      country: countryVal,
-      population: populationVal
-    });
-    console.log(this.state.country);
-    console.log(this.state.population);
   }
 
   handleChangeName = (event) => {
@@ -33,35 +23,35 @@ class App extends Component {
     this.setState({population: event.target.value});
   }
 
+  handleCapitalCheck = (event) => {
+    this.setState({capitalInfo: event.target.checked});  
+  }
+
   handleSubmit = (event) => {
-    console.log('Country submitted: ' + this.state.country);
-    console.log('Population was submitted: ' + this.state.population);
     axios.get('https://jsonmock.hackerrank.com/api/countries/search?name=' + this.state.country)
     .then((response) => this.getCountryList(response));
     event.preventDefault();
   }
 
   getCountryList = (results) => {
-    console.log(results.data.data);
     var countries = [];
     var countriesData = results.data.data;
     for (var i = 0; i < countriesData.length; i++) {
         console.log(countriesData[i]);
         if (countriesData[i].population > this.state.population) {
-          countries.push(countriesData[i].name);
+          countries.push(countriesData[i]);
         }
     }
-    console.log('Countries: ' + countries);
-    console.log(typeof(countries));
     this.setState({countryList: countries});
   }
 
   render() {
     return (
       <div className="App">
+          <p>Enter some letters of country's name and the desired population: </p>
           <form onSubmit={this.handleSubmit}>
             <label>
-              Country:
+              Country Name:
               <input type="text" value={this.state.country} onChange={this.handleChangeName} />
             </label>
             <br />
@@ -70,11 +60,15 @@ class App extends Component {
               <input type="text" value={this.state.population} onChange={this.handleChangePop} />
             </label>
             <br/ >
+            <input type="checkbox" value={this.state.capitalInfo} onChange={this.handleCapitalCheck} />
+            Show capital info
             <input type="submit" value="Submit" />
           </form>
-          <CountryTable countries={this.state.countryList}/>
+          <CountryTable 
+            countries={this.state.countryList} 
+            capitalInfo={this.state.capitalInfo} 
+          />
       </div>
-
     );
   }
 }
