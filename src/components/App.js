@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './App.css';
 import CountryTable from './CountryTable';
+import Searcher from './Searcher';
+import '../styles/App.css';
 
-class App extends Component {
+export default class App extends Component {
 
   constructor (props) {
     super(props);
@@ -48,29 +49,17 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-          <p>Enter some letters of country's name and the desired population: </p>
-          <form onSubmit={this.handleSubmit}>
-            <label>
-              Country Name:
-              <input type="text" value={this.state.country} onChange={this.handleChangeName} />
-            </label>
-            <br />
-            <label>
-              Population:
-              <input type="text" value={this.state.population} onChange={this.handleChangePop} />
-            </label>
-            <br/ >
-            <input type="checkbox" value={this.state.capitalInfo} onChange={this.handleCapitalCheck} />
-            Show capital info
-            <input type="submit" value="Submit" />
-          </form>
-          <CountryTable 
-            countries={this.state.countryList} 
-            capitalInfo={this.state.capitalInfo} 
-          />
+        <Searcher 
+          nameChange={this.handleChangeName}
+          popChange={this.handleChangePop}
+          capCheck={this.handleCapitalCheck}
+          submit={this.handleSubmit}       
+        />
+        <CountryTable 
+          countries={this.state.countryList} 
+          capitalInfo={this.state.capitalInfo} 
+        />
       </div>
     );
   }
 }
-
-export default App;
