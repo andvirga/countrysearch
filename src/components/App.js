@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import CountryTable from './CountryTable';
 import Searcher from './Searcher';
+import Paginator from './Paginator';
 import '../styles/App.css';
 
 export default class App extends Component {
@@ -13,6 +14,10 @@ export default class App extends Component {
       population: "",
       countryList: [],
       capitalInfo: false,
+      currentPage: 0,
+      resultsPerPage: 0,
+      totalPages: 0,
+      totalResults: 0
     }
   }
 
@@ -34,16 +39,26 @@ export default class App extends Component {
     event.preventDefault();
   }
 
+  handleGoToSpecificPage = (i) => {
+    console.log('Go To page: ', i);
+  }
+
   getCountryList = (results) => {
+    console.log(results);
     var countries = [];
     var countriesData = results.data.data;
     for (var i = 0; i < countriesData.length; i++) {
-        console.log(countriesData[i]);
         if (countriesData[i].population > this.state.population) {
           countries.push(countriesData[i]);
         }
     }
-    this.setState({countryList: countries});
+    this.setState({
+      countryList: countries,
+      currentPage: results.data.page,
+      resultsPerPage: results.data.per_page,
+      totalPages: results.data.total_pages,
+      totalResults:results.data.total,
+    });
   }
 
   render() {
@@ -58,6 +73,13 @@ export default class App extends Component {
         <CountryTable 
           countries={this.state.countryList} 
           capitalInfo={this.state.capitalInfo} 
+        />
+        <Paginator
+          currentPage={this.state.currentPage}
+          resultsPerPage={this.state.resultsPerPage}
+          totalPages={this.state.totalPages}
+          totalResults={this.state.totalResults}
+          goToPage={this.handleGoToSpecificPage} 
         />
       </div>
     );

@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 class CountryTable extends Component {
 
     mapCountriesData = () => {
-        console.log(this.props.capitalInfo);
         const list = this.props.countries.map((c) => {
             return (<div>
                         <li>{c.name}</li>
